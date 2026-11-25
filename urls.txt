@@ -1,0 +1,21 @@
+# Adresy stron do skanowania, po jednym w linii (linie z # są pomijane).
+# Wejdź na euro.com.pl, otwórz kategorię lub stronę outletu/wyprzedaży i wklej jej adres.
+# Poniższe adresy są sprawdzone jako istniejące; dodaj kategorie (pralki, telewizory, laptopy...)
+# oraz outlet, bo tam najczęściej trafiają się największe obniżki.
+https://www.euro.com.pl/cms/sezonowa-wyprzedaz.bhtml
+https://www.euro.com.pl/cms/mistrzowska-wyprzedaz.bhtml
+https://www.euro.com.pl/cms/euro-wjechalo-zeby-sie-taniej-kupowalo.bhtml
+# Black Friday Weeks (bez parametru śledzącego ?link=header-usp)
+https://www.euro.com.pl/cms/black-friday.bhtml
+https://www.euro.com.pl/cms/black-friday.bhtml?cat=tr
+https://www.euro.com.pl/cms/black-friday.bhtml?cat=sf
+# Główne kategorie (całe RTV/AGD)
+https://www.euro.com.pl/agd.bhtml
+https://www.euro.com.pl/agd-do-zabudowy.bhtml
+https://www.euro.com.pl/agd-male.bhtml
+https://www.euro.com.pl/rtv.bhtml
+https://www.euro.com.pl/hifi-audio.bhtml
+https://www.euro.com.pl/komputery.bhtml
+https://www.euro.com.pl/telefony-i-nawigacja-gps.bhtml
+https://www.euro.com.pl/gry-i-konsole.bhtml
+https://www.euro.com.pl/foto-i-kamery.bhtml
