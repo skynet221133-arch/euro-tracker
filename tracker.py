@@ -32,6 +32,7 @@ MIN_DISCOUNT = float(os.getenv("MIN_DISCOUNT", "70"))
 MIN_PRICE = float(os.getenv("MIN_PRICE", "0"))
 MAX_PAGES = int(os.getenv("MAX_PAGES", "30"))
 DELAY = 1.5  # sekundy między zapytaniami - bądźmy grzeczni dla serwera
+USE_BROWSER = os.getenv("USE_BROWSER", "0") == "1"
 
 HEADERS = {
     "User-Agent": (
@@ -140,7 +141,46 @@ def next_page_url(html: str, page_url: str):
     return None
 
 
+_browser = {}
+
+
+def fetch_browser(url: str):
+    """Pobiera stronę prawdziwą przeglądarką (Playwright) - omija proste blokady botów."""
+    from playwright.sync_api import sync_playwright
+
+    if "ctx" not in _browser:
+        pw = sync_playwright().start()
+        b = pw.chromium.launch(
+            headless=True, args=["--disable-blink-features=AutomationControlled"]
+        )
+        ctx = b.new_context(
+            locale="pl-PL",
+            user_agent=HEADERS["User-Agent"],
+            viewport={"width": 1366, "height": 900},
+        )
+        _browser.update(pw=pw, b=b, ctx=ctx)
+    page = _browser["ctx"].new_page()
+    try:
+        resp = page.goto(url, wait_until="domcontentloaded", timeout=60000)
+        status = resp.status if resp else 0
+        if status != 200:
+            print(f"  HTTP {status} (przeglądarka) dla {url}", file=sys.stderr)
+            return None
+        page.wait_for_timeout(2500)
+        for _ in range(8):  # przewijanie, żeby załadowały się produkty
+            page.mouse.wheel(0, 2500)
+            page.wait_for_timeout(400)
+        return page.content()
+    except Exception as e:  # noqa: BLE001
+        print(f"  błąd przeglądarki: {e}", file=sys.stderr)
+        return None
+    finally:
+        page.close()
+
+
 def fetch(session: requests.Session, url: str):
+    if USE_BROWSER:
+        return fetch_browser(url)
     for attempt in range(3):
         try:
             r = session.get(url, headers=HEADERS, timeout=30)
